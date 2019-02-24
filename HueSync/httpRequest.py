@@ -1,8 +1,9 @@
 import json
 from botocore.vendored import requests
 
-URL = 'http://IP/'
+URL = 'https://internet/'
 def lambda_handler(event, context):
+    print(event)
     request_type = event['request']['type']
     
     if request_type == "LaunchRequest":
@@ -14,10 +15,8 @@ def lambda_handler(event, context):
         else:
             intent = "StopIntent"
 
-
-
     try:
-        req = requests.get(URL, timeout=2)
+        req = requests.get(URL, timeout=3, verify=False)
         state = req.text
         
         if intent == "StopIntent" or state == "stopping":
@@ -38,5 +37,6 @@ def lambda_handler(event, context):
                 'type': 'PlainText',
                 'text': answer,
             }
-        }
+        },
+        "shouldEndSession": False
     }
